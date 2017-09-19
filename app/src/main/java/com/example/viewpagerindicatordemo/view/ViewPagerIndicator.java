@@ -1,6 +1,7 @@
 package com.example.viewpagerindicatordemo.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -26,9 +27,16 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
     private int startX;
     private int textWidth;
     private Paint paint;
-    private int leftMargin = 10;
     private int currentPosition;
-    private int rightMargin = 10;
+    private int leftMargin;
+    private int rightMargin;
+    private int titleColor;
+    private int titleSelectionColor;
+    private int titleTextSize;
+    private int indicatorColor;
+    private int topMargin;
+    private int bottomMargin;
+    private int indicatorSize;
 
     public ViewPagerIndicator(Context context) {
         super(context);
@@ -39,6 +47,20 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
 
     public ViewPagerIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator);
+        if(array!=null){
+            leftMargin = (int) array.getDimension(R.styleable.ViewPagerIndicator_marginLeft,10);
+            rightMargin = (int) array.getDimension(R.styleable.ViewPagerIndicator_marginRight,10);
+            titleColor = array.getColor(R.styleable.ViewPagerIndicator_titleColor,Color.BLACK);
+            titleSelectionColor = array.getColor(R.styleable.ViewPagerIndicator_titleSelectionColor,Color.RED);
+            titleTextSize = (int) array.getDimension(R.styleable.ViewPagerIndicator_titleTextSize,20);
+            indicatorColor =  array.getColor(R.styleable.ViewPagerIndicator_indicatorColor,Color.RED);
+            topMargin = (int) array.getDimension(R.styleable.ViewPagerIndicator_marginTop,5);
+            bottomMargin = (int) array.getDimension(R.styleable.ViewPagerIndicator_marginBottom,5);
+            indicatorSize = (int) array.getDimension(R.styleable.ViewPagerIndicator_indicatorSize,3);
+            array.recycle();
+        }
+
         init();
     }
 
@@ -48,8 +70,8 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
     }
     private void init() {
         paint = new Paint();
-        paint.setStrokeWidth(3);
-        paint.setColor(Color.RED);
+        paint.setStrokeWidth(indicatorSize);
+        paint.setColor(indicatorColor);
         paint.setAntiAlias(true);
 
     }
@@ -68,8 +90,10 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
             View view = View.inflate(getContext(), R.layout.indicator_item, null);
             view.setOnClickListener(this);
             final TextView titleText = view.findViewById(R.id.indicator_item_text);
+            titleText.setTextColor(titleColor);
+            titleText.setTextSize(titleTextSize);
             if(i==0){
-                titleText.setTextColor(Color.RED);
+                titleText.setTextColor(titleSelectionColor);
                 //等到界面渲染出之后获取textview的宽
                 titleText.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -83,10 +107,10 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
                 });
 
             }
-            titleText.setTextSize(20);
+
             titleText.setText(viewPager.getAdapter().getPageTitle(i));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(leftMargin,5,rightMargin,5);
+            params.setMargins(leftMargin,topMargin,rightMargin,bottomMargin);
 
             linearLayout.addView(view,params);
         }
@@ -125,9 +149,9 @@ public class ViewPagerIndicator extends HorizontalScrollView implements ViewPage
                  startX = (int) linearLayout.getChildAt(i).getX();
                  textWidth = linearLayout.getChildAt(i).getMeasuredWidth();
                 postInvalidate();
-                title.setTextColor(Color.RED);
+                title.setTextColor(titleSelectionColor);
             }else {
-                title.setTextColor(Color.BLACK);
+                title.setTextColor(titleColor);
             }
         }
 

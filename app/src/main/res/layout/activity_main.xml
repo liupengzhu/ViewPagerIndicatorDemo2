@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:view = "http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,6 +11,14 @@
         android:id="@+id/view_pager_indicator"
         android:layout_width="match_parent"
         android:scrollbars="none"
+        android:background="#DBDBDB"
+        view:titleTextSize="8sp"
+        view:titleColor="#000000"
+        view:titleSelectionColor="#00B2EE"
+        view:indicatorColor="#00B2EE"
+        view:marginTop="10dp"
+        view:marginBottom="10dp"
+        view:indicatorSize="5sp"
         android:layout_height="wrap_content"></com.example.viewpagerindicatordemo.view.ViewPagerIndicator>
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
